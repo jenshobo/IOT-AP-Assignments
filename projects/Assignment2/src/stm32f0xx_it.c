@@ -53,6 +53,7 @@ void USART1_IRQHandler(void)
    {
      // Read the data, clears the interrupt flag
      queue_push(USART1->RDR);
+		 
    }
 }
 

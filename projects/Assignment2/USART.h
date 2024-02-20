@@ -23,18 +23,6 @@ void USART_init(void)
    NVIC_ClearPendingIRQ(USART1_IRQn);
 }
 
-char USART_getc(void)
-{
-	char c;
-	if((USART1->ISR & USART_ISR_ORE) != 0)
-	{
-		USART1->ICR |= USART_ICR_ORECF;
-	}
-	while((USART1->ISR & USART_ISR_RXNE) == 0){ } // this is polling
-	c = (char)USART1->RDR;
-	return(c);
-}
-
 void USART_putc(char c)
 {
 	while((USART1->ISR & USART_ISR_TXE) == 0); // this is polling
