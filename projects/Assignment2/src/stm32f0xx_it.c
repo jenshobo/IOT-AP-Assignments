@@ -29,7 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
-//#include "../USART.h"
+#include "../queue.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -44,8 +44,18 @@
 
 void USART1_IRQHandler(void)
 {
-	//USART_putc('a');
+	// if input from computer
+	// push input to queue
+	// reset IRQ
+	
+   // Read Data Register not empty interrupt?
+   if(USART1->ISR & USART_ISR_RXNE)
+   {
+     // Read the data, clears the interrupt flag
+     queue_push(USART1->RDR);
+   }
 }
+
 
 /**
   * @brief  This function handles NMI exception.

@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>Assignment2</TargetName>
+      <TargetName>Assignment1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
@@ -397,6 +397,11 @@
               <FileName>USART.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\USART.h</FilePath>
+            </File>
+            <File>
+              <FileName>queue.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\queue.h</FilePath>
             </File>
           </Files>
         </Group>

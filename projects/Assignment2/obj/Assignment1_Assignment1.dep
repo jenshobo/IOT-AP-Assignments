@@ -1,14 +1,14 @@
-Dependencies for Project 'Assignment2', Target 'Assignment2': (DO NOT MODIFY !)
+Dependencies for Project 'Assignment1', Target 'Assignment1': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (.\src\main.c)(0x65CE212D)(-c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I .\inc -I ..\..\libraries\CMSIS\Include -I ..\..\libraries\CMSIS\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Drivers\CMSIS\Device\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Device\Include-D__UVISION_VERSION="536" -DSTM32F051x8-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
+F (.\src\main.c)(0x65D49C3A)(-c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I .\inc -I ..\..\libraries\CMSIS\Include -I ..\..\libraries\CMSIS\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Drivers\CMSIS\Device\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Device\Include-D__UVISION_VERSION="536" -DSTM32F051x8-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
 I (.\inc\stm32f0xx.h)(0x65C273F5)
 I (..\..\libraries\CMSIS\Include\core_cm0.h)(0x65C273F3)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602585EE)
 I (..\..\libraries\CMSIS\Include\core_cmInstr.h)(0x65C273F4)
 I (..\..\libraries\CMSIS\Include\core_cmFunc.h)(0x65C273F3)
 I (.\inc\system_stm32f0xx.h)(0x65C273F5)
-I (src\../USART.h)(0x65CE20D6)
-F (.\src\stm32f0xx_it.c)(0x65CE20E0)(-c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I .\inc -I ..\..\libraries\CMSIS\Include -I ..\..\libraries\CMSIS\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Drivers\CMSIS\Device\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Device\Include-D__UVISION_VERSION="536" -DSTM32F051x8-o .\obj\stm32f0xx_it.o --omf_browse .\obj\stm32f0xx_it.crf --depend .\obj\stm32f0xx_it.d)
+I (src\../USART.h)(0x65D49D68)
+F (.\src\stm32f0xx_it.c)(0x65D49C60)(-c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I .\inc -I ..\..\libraries\CMSIS\Include -I ..\..\libraries\CMSIS\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Drivers\CMSIS\Device\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Device\Include-D__UVISION_VERSION="536" -DSTM32F051x8-o .\obj\stm32f0xx_it.o --omf_browse .\obj\stm32f0xx_it.crf --depend .\obj\stm32f0xx_it.d)
 I (.\inc\stm32f0xx_it.h)(0x65C273F5)
 I (.\inc\stm32f0xx.h)(0x65C273F5)
 I (..\..\libraries\CMSIS\Include\core_cm0.h)(0x65C273F3)
@@ -16,7 +16,10 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602585EE)
 I (..\..\libraries\CMSIS\Include\core_cmInstr.h)(0x65C273F4)
 I (..\..\libraries\CMSIS\Include\core_cmFunc.h)(0x65C273F3)
 I (.\inc\system_stm32f0xx.h)(0x65C273F5)
-F (.\USART.h)(0x65CE20D6)()
+I (src\../queue.h)(0x65D49D9E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x602585EC)
+F (.\USART.h)(0x65D49D68)()
+F (.\queue.h)(0x65D49D9E)()
 F (.\startup\startup_stm32f0xx.s)(0x65C273F6)(--cpu Cortex-M0 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Drivers\CMSIS\Device\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Device\Include--pd "__UVISION_VERSION SETA 536" --pd "STM32F051x8 SETA 1"--list .\obj\startup_stm32f0xx.lst --xref -o .\obj\startup_stm32f0xx.o --depend .\obj\startup_stm32f0xx.d)
 F (.\startup\system_stm32f0xx.c)(0x65C273F6)(-c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I .\inc -I ..\..\libraries\CMSIS\Include -I ..\..\libraries\CMSIS\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Drivers\CMSIS\Device\ST\STM32F0xx\Include-IC:\Users\jensh\AppData\Local\Arm\Packs\Keil\STM32F0xx_DFP\2.1.1\Device\Include-D__UVISION_VERSION="536" -DSTM32F051x8-o .\obj\system_stm32f0xx.o --omf_browse .\obj\system_stm32f0xx.crf --depend .\obj\system_stm32f0xx.d)
 I (.\inc\stm32f0xx.h)(0x65C273F5)
