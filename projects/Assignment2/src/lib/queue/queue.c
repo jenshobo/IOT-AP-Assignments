@@ -6,24 +6,21 @@ uint8_t end_pointer = 0;
 
 void queue_init(void)
 {
-	// setup led pins
 	led_matrix_init();
 }
 
-bool queue_push(char character)
+void queue_push(char character)
 {
-	// if queue is full
-	// return false
+	if (queue_get_new_position(start_pointer) == end_pointer)
+	{
+		flash_led();
+		return;
+	}
 	
-	// push char to queue
-	// update led pins
-	// return true
 	queue[start_pointer] = character;
 	
 	start_pointer = queue_get_new_position(start_pointer);
 	set_matrix(start_pointer, end_pointer);
-	
-	return true;
 }
 
 char queue_pop(void)
@@ -32,9 +29,6 @@ char queue_pop(void)
 	
 	if (queue_get_length() <= 0)
 	{	return '\0';	}
-	// pop char from queue
-	// update led pins
-	// return char
 	character = queue[end_pointer];
 	
 	end_pointer = queue_get_new_position(end_pointer);
@@ -45,13 +39,9 @@ char queue_pop(void)
 
 uint8_t queue_get_length(void)
 {
-	uint8_t count = 0;
-	uint8_t counter = 0;
-	for (counter = start_pointer; counter != end_pointer; counter++)
-	{
-		count = count + 1;
-		counter = queue_get_new_position(counter);
-	}
+	int16_t count = end_pointer - start_pointer;
+	if (count < 0)
+	{	count = count + QUEUE_SIZE - 1;	}
 	return count;
 }
 

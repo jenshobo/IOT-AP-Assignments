@@ -29,7 +29,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
-#include "../queue.h"
+#include "./lib/USART/USART.h"
+#include "./lib/queue/queue.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -53,7 +54,6 @@ void USART1_IRQHandler(void)
    {
      // Read the data, clears the interrupt flag
      queue_push(USART1->RDR);
-		 
    }
 }
 

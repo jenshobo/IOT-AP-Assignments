@@ -1,4 +1,6 @@
 #include "led_matrix.h"
+#include "../queue/queue.h"
+#include "../delay/delay.h"
 
 void led_matrix_init(void)
 {
@@ -15,15 +17,10 @@ void set_matrix(uint8_t start_pointer, uint8_t end_pointer)
 	while (start_pointer != end_pointer)
 	{
 		matrix |= power_of(2, end_pointer);
-		end_pointer = led_get_new_position(end_pointer);
+		end_pointer = queue_get_new_position(end_pointer);
 	}
 	
 	GPIOC->ODR = matrix<<1;
-}
-
-uint8_t led_get_new_position(uint8_t pointer)
-{
-	return pointer >= LED_SIZE - 1 ? 0 : pointer + 1;
 }
 
 uint16_t power_of(uint8_t base, uint8_t exponent)
@@ -35,4 +32,14 @@ uint16_t power_of(uint8_t base, uint8_t exponent)
 		exponent = exponent - 1;
 	}
 	return start;
+}
+
+void flash_led()
+{
+	uint8_t delay_time = 10;
+	for (; delay_time > 0; delay_time--)
+	{
+		GPIOC->ODR = ~GPIOC->ODR;
+		delay(ONE_SECOND / 10);
+	}
 }

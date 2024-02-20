@@ -20,8 +20,28 @@ void USART_init(void)
    NVIC_ClearPendingIRQ(USART1_IRQn);
 }
 
-void USART_putc(char c)
+void USART_putchar(char character)
 {
 	while((USART1->ISR & USART_ISR_TXE) == 0); // this is polling
-	USART1->TDR = c;
+	USART1->TDR = character;
+}
+
+void USART_putstring(char *string)
+{
+	uint8_t index = 0;
+	char currentChar = ' ';
+	for (; currentChar != '\0'; index++)
+	{
+		currentChar = string[index];
+		USART_putchar(currentChar);
+	}
+}
+
+void USART_clearscreen(void)
+{
+  char cmd1[5] = {0x1B, '[', '2', 'J', '\0'}; // Clear screen
+  char cmd2[4] = {0x1B, '[', 'f', '\0'}; // Cursor home
+  
+  USART_putstring(cmd1);
+  USART_putstring(cmd2);
 }
