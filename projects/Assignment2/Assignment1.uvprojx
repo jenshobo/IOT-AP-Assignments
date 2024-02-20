@@ -408,6 +408,21 @@
               <FileType>5</FileType>
               <FilePath>.\led_matrix.h</FilePath>
             </File>
+            <File>
+              <FileName>USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USART.c</FilePath>
+            </File>
+            <File>
+              <FileName>queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>led_matrix.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\led_matrix.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

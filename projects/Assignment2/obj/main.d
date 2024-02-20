@@ -6,3 +6,6 @@
 .\obj\main.o: ..\..\libraries\CMSIS\Include\core_cmInstr.h
 .\obj\main.o: ..\..\libraries\CMSIS\Include\core_cmFunc.h
 .\obj\main.o: .\inc\system_stm32f0xx.h
+.\obj\main.o: src\../queue.h
+.\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\main.o: src\../led_matrix.h

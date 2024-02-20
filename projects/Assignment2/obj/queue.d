@@ -1,0 +1,10 @@
+.\obj\queue.o: queue.c
+.\obj\queue.o: queue.h
+.\obj\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\queue.o: led_matrix.h
+.\obj\queue.o: .\inc\stm32f0xx.h
+.\obj\queue.o: ..\..\libraries\CMSIS\Include\core_cm0.h
+.\obj\queue.o: ..\..\libraries\CMSIS\Include\core_cmInstr.h
+.\obj\queue.o: ..\..\libraries\CMSIS\Include\core_cmFunc.h
+.\obj\queue.o: .\inc\system_stm32f0xx.h

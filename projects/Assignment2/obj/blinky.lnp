@@ -1,6 +1,9 @@
 --cpu Cortex-M0
 ".\obj\main.o"
 ".\obj\stm32f0xx_it.o"
+".\obj\usart.o"
+".\obj\queue.o"
+".\obj\led_matrix.o"
 ".\obj\startup_stm32f0xx.o"
 ".\obj\system_stm32f0xx.o"
 --library_type=microlib --strict --scatter ".\obj\blinky.sct"

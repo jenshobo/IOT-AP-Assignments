@@ -4,19 +4,18 @@
 /* Please see the following files for  */
 /* the implementation and explanation: */
 /*																		 */
-/* USART.h														 */
-/* queue.h														 */
-/* led_matrix.h												 */
+/* USART.c														 */
+/* queue.c														 */
+/* led_matrix.c												 */
 /* stm32f0xx_it.c 										 */
 /***************************************/
 
 #include "../USART.h"
+#include "../queue.h"
 
 int main(void)
 {
-	RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-	GPIOC->MODER |= 0x00155554;
-	
+	queue_init();
 	USART_init();
 	for (;;) { ; }
 }
