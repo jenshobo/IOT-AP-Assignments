@@ -7,7 +7,7 @@
 /* USART.c														 */
 /* delay.c														 */
 /* queue.c														 */
-/* led_matrix.c												 */
+/* led_matrix.c	(line 46-51)					 */
 /* stm32f0xx_it.c 										 */
 /***************************************/
 
@@ -17,18 +17,18 @@
 
 int main(void)
 {
-	queue_init();
-	USART_init();
+	queue_init(); 													/* Create queue in queue.h */
+	USART_init(); 													/* Setup USART registers */
 	
-	USART_clearscreen();
+	USART_clearscreen(); 										/* Clear junk from serial screen */
 	for (;;)
 	{
-		if (queue_get_length() != 0)
+		if (queue_get_length() != 0) 					/* If item in queue */
 		{
 			USART_putstring("This is a test: ");
-			USART_putchar(queue_pop());
+			USART_putchar(queue_pop()); 				/* Take top most item from queue */
 			USART_putstring("\r\n");
-			delay(ONE_SECOND);
+			delay(ONE_SECOND); 									/* Wait ~one second */
 		}
 	}
 }

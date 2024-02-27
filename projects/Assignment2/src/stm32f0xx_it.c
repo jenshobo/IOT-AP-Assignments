@@ -45,16 +45,9 @@
 
 void USART1_IRQHandler(void)
 {
-	// if input from computer
-	// push input to queue
-	// reset IRQ
-	
    // Read Data Register not empty interrupt?
-   if(USART1->ISR & USART_ISR_RXNE)
-   {
-     // Read the data, clears the interrupt flag
-     queue_push(USART1->RDR);
-   }
+   if(USART1->ISR & USART_ISR_RXNE)	/* If something in data in register */
+   {	queue_push(USART1->RDR);	}		/* Push input into backend of queue */
 }
 
 

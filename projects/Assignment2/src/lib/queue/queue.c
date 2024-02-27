@@ -1,51 +1,61 @@
-#include "queue.h"
+/***************************************/
+/* Code writen for Windesheim IOT 2024 */
+/***************************************/
+/* Please see the following file(s)		 */
+/* for used includes, defines and/or	 */
+/* consts, if any.										 */
+/*																		 */
+/* queue.h														 */
+/***************************************/
 
-char queue[QUEUE_SIZE];
-uint8_t start_pointer = 0;
-uint8_t end_pointer = 0;
+#include "queue.h"	/* Include own header file */
+
+char queue[QUEUE_SIZE];			/* Queue array */
+uint8_t start_pointer = 0;	/* Start position of existing queue */
+uint8_t end_pointer = 0;		/* End position of existing queue */
 
 void queue_init(void)
 {
-	led_matrix_init();
+	led_matrix_init();	/* Initialize led_matrix */
 }
 
 void queue_push(char character)
 {
-	if (queue_get_new_position(start_pointer) == end_pointer)
+	if (queue_get_new_position(end_pointer) == start_pointer)	/* If queue is empty */
 	{
-		flash_led();
-		return;
+		flash_led();																						/* Flash led matrix */
+		return;																									/* Return out of methode, can't add item */
 	}
 	
-	queue[start_pointer] = character;
+	queue[end_pointer] = character;														/* Place item in queue */
 	
-	start_pointer = queue_get_new_position(start_pointer);
-	set_matrix(start_pointer, end_pointer);
+	end_pointer = queue_get_new_position(end_pointer);				/* Move <end_pointer> to next in queue */
+	set_matrix(end_pointer, start_pointer);										/* Set led_matrix */
 }
 
 char queue_pop(void)
 {
-	char character;
+	char character = ' ';
 	
-	if (queue_get_length() <= 0)
-	{	return '\0';	}
-	character = queue[end_pointer];
+	if (queue_get_length() <= 0)														/* If queue is empty */
+	{	return '\0';	}																				/* Return '\0' */
+	character = queue[start_pointer];												/* Get item from queue */
 	
-	end_pointer = queue_get_new_position(end_pointer);
-	set_matrix(start_pointer, end_pointer);
+	start_pointer = queue_get_new_position(start_pointer);	/* Move <start_pointer> to next in queue */
+	set_matrix(end_pointer, start_pointer);									/* Set led_matrix */
 	
-	return character;
+	return character;																				/* Return found character */
 }
 
 uint8_t queue_get_length(void)
 {
-	int16_t count = end_pointer - start_pointer;
-	if (count < 0)
-	{	count = count + QUEUE_SIZE - 1;	}
-	return count;
+	int16_t difference = start_pointer - end_pointer;	/* Calculate difference */
+	if (difference < 0)																/* If difference < 0 */
+	{	difference = difference + QUEUE_SIZE - 1;	}			/* Offset difference to compensate */
+	return difference;																/* Return difference, aka length */
 }
 
 uint8_t queue_get_new_position(uint8_t pointer)
 {
-	return pointer >= QUEUE_SIZE - 1 ? 0 : pointer + 1;
+	return pointer >= QUEUE_SIZE - 1 ? 0 : pointer + 1;	/* Return next position in queue */
 }
