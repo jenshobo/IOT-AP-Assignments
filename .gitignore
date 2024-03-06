@@ -1,0 +1,5 @@
+# ignore .jennh files
+*.jensh
+
+# ignore all obj files
+obj/
