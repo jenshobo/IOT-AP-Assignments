@@ -28,85 +28,59 @@ void init_GPIO(void)
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource5,  GPIO_AF_1);	/* Set alternate function source */
 	
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_2);	/* Set alternate function source */
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_2);//2);	/* Set alternate function source */
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_2);	/* Set alternate function source */
 }
 void init_led_timers(void)
 {
-  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-  TIM_OCInitTypeDef       TIM_OCInitStructure;
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;								/* Data type for storing information */
+  TIM_OCInitTypeDef       TIM_OCInitStructure;									/* Data type for storing information */
   
-  //[..] To use the Timer in Output Compare mode, the following steps are mandatory:
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);					/* Enable TIM3 peripheral clock */
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);					/* Enable TIM4 peripheral clock */
   
-  //(#) Enable TIM clock
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-  
-  //(#) Configure the Time base unit as described in the first part of this 
-  //    driver, if needed, else the Timer will run with the default 
-  //    configuration:
-  //    (++) Autoreload value = 0xFFFF.
-  //    (++) Prescaler value = 0x0000.
-  //    (++) Counter mode = Up counting.
-  //    (++) Clock Division = TIM_CKD_DIV1.
-  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-  TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;
-  TIM_TimeBaseStructure.TIM_Period        = Period - 1; // 200 Hz (0.2 KHz, 5ms)
-  TIM_TimeBaseStructure.TIM_Prescaler     = (SystemCoreClock / 20000) - 1;
-  TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
-  
-  //(#) Fill the TIM_OCInitStruct with the desired parameters including:
-  //    (++) The TIM Output Compare mode: TIM_OCMode.
-  //    (++) TIM Output State: TIM_OutputState.
-  //    (++) TIM Pulse value: TIM_Pulse.
-  //    (++) TIM Output Compare Polarity : TIM_OCPolarity.
-  TIM_OCInitStructure.TIM_OCMode      = TIM_OCMode_PWM1;
-  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse       = Start_Percentage;
-  TIM_OCInitStructure.TIM_OCPolarity  = TIM_OCPolarity_High;
-  
-  //(#) Call TIM_OCxInit(TIMx, &TIM_OCInitStruct) to configure the desired 
-  //    channel with the corresponding configuration.
-  TIM_OC1Init(TIM3, &TIM_OCInitStructure);
-	TIM_OC2Init(TIM3, &TIM_OCInitStructure);
-	TIM_OC3Init(TIM3, &TIM_OCInitStructure);
-	TIM_OC4Init(TIM3, &TIM_OCInitStructure);
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;				/* Set clock devision */
+  TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;	/* Set counter mode */
+  TIM_TimeBaseStructure.TIM_Period        = PERIOD - 1;					/* Set period */
+  TIM_TimeBaseStructure.TIM_Prescaler     = LED_PRESCALER - 1; 	/* Set prescaler (See pwm.h for calculation)*/
 	
-	TIM_OC3Init(TIM2, &TIM_OCInitStructure);
-	TIM_OC4Init(TIM2, &TIM_OCInitStructure);
+  TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);								/* Set settings for TIM3 */
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);								/* Set seetings for TIM4 */
+  
+  TIM_OCInitStructure.TIM_OCMode      = TIM_OCMode_PWM1;				/* Set PWM mode */
+  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;	/* Enable output */
+  TIM_OCInitStructure.TIM_Pulse       = START_PERCENTAGE;				/* Set Duty cycle */
+  TIM_OCInitStructure.TIM_OCPolarity  = TIM_OCPolarity_High;		/* Set polarity */
 	
-	// this code is not needed here
-	// set duty cycle to <Start_Percentage> (aka <Start_Percentage>% on, rest off)
-	//TIM_SetCompare1(TIM3, Start_Percentage);
-	//TIM_SetCompare2(TIM3, Start_Percentage);
-	//TIM_SetCompare3(TIM3, Start_Percentage);
-  //TIM_SetCompare4(TIM3, Start_Percentage);
-		
-	//TIM_SetCompare3(TIM2, Start_Percentage);
-	//TIM_SetCompare4(TIM2, Start_Percentage);
+  TIM_OC1Init(TIM3, &TIM_OCInitStructure);											/* Set TIM3 output channel 1 */
+	TIM_OC2Init(TIM3, &TIM_OCInitStructure);											/* Set TIM3 output channel 2 */
+	TIM_OC3Init(TIM3, &TIM_OCInitStructure);											/* Set TIM3 output channel 3 */
+	TIM_OC4Init(TIM3, &TIM_OCInitStructure);											/* Set TIM3 output channel 4 */
+	
+	TIM_OC3Init(TIM2, &TIM_OCInitStructure);											/* Set TIM3 output channel 3 */
+	TIM_OC4Init(TIM2, &TIM_OCInitStructure);											/* Set TIM3 output channel 4 */
 
-  //(#) Call the TIM_Cmd(ENABLE) function to enable the TIM counter.
-  TIM_Cmd(TIM3, ENABLE);
-	TIM_Cmd(TIM2, ENABLE);
+  TIM_Cmd(TIM3, ENABLE);																				/* Start TIM3 */
+	TIM_Cmd(TIM2, ENABLE);																				/* Start TIM2 */
 }
 
 void init_interrupt_timer(void)
 {
-  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;								/* Data type for storing information */
 	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM14, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM14, ENABLE);					/* Enable TIM14 peripheral clock */
 	
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-  TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period 				= 100 - 1;
-  TIM_TimeBaseStructure.TIM_Prescaler     = (SystemCoreClock / 200) - 1; // 20 Hz (0.02 KHz, 50ms)
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;				/* Set clock devision */
+  TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;	/* Set counter mode */
+	TIM_TimeBaseStructure.TIM_Period 				= PERIOD - 1;					/* Set period */
+  TIM_TimeBaseStructure.TIM_Prescaler     = MASK_PRESCALER - 1;	/* Set prescaler (See pwm.h for calculation)*/
 	
-  TIM_TimeBaseInit(TIM14, &TIM_TimeBaseStructure);
+  TIM_TimeBaseInit(TIM14, &TIM_TimeBaseStructure);							/* Set settings for TIM14 */
 	
-	TIM_Cmd(TIM14, ENABLE);
+	TIM_Cmd(TIM14, ENABLE);																				/* Start TIM14 */
 	
-	TIM14->DIER |= TIM_DIER_CC1IE; // enable interrupt on capture compare
+	TIM_SetCompare1(TIM14, PERIOD);																/* Set duty cycle to 100% */
+	TIM14->DIER |= TIM_DIER_CC1IE; 																/* Snable interrupt on capture compare */
 	
-	NVIC_EnableIRQ(TIM14_IRQn);
-	NVIC_ClearPendingIRQ(TIM14_IRQn);
+	NVIC_EnableIRQ(TIM14_IRQn); 																	/* Enable overal interrupt for TIM14 */
+	NVIC_ClearPendingIRQ(TIM14_IRQn);															/* If set, clear interrupt flag */
 }

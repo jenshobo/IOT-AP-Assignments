@@ -110,13 +110,25 @@ void SysTick_Handler(void)
   */
 void TIM14_IRQHandler(void)
 {
-	#define max_wait 32678
+	#define max_wait   65355
 	
-	static uint8_t values[] = { Start_Percentage, Start_Percentage, Start_Percentage, Start_Percentage, Start_Percentage, Start_Percentage };
+	#define first_led  0
+	#define second_led 1
+	#define third_led  2
+	#define forth_led  3
+	#define fifth_led  4
+	#define sixth_led  5
+	
+	#define milestone_stepsize 15
+	#define max_milestone      150
+	
+	#define step_size 2
+	
+	static uint8_t values[] = { START_PERCENTAGE, START_PERCENTAGE, START_PERCENTAGE, START_PERCENTAGE, START_PERCENTAGE, START_PERCENTAGE };
 	static uint16_t counter = 0;
 	
 	static uint16_t wait = 0;
-	
+
 	if (wait >= max_wait)
 	{
 		wait = 0;
@@ -143,64 +155,64 @@ void TIM14_IRQHandler(void)
 	70% - 70% - 70% - 70% - 70% - 70% = 135 steps
 	*/
 	
-	if (counter <= 15)
+	if (counter <= milestone_stepsize)
 	{
-		values[0] -= 2;
+		values[first_led] -= step_size;
 	}
-	else if (counter <= 30)
+	else if (counter <= milestone_stepsize * 2)
 	{
-		values[0] -= 2;
-		values[1] -= 2;
+		values[first_led] -= step_size;
+		values[second_led] -= step_size;
 	}
-	else if (counter <= 45)
+	else if (counter <= milestone_stepsize * 3)
 	{
-		values[0] += 2;
-		values[1] -= 2;
-		values[2] -= 2;
+		values[first_led] += step_size;
+		values[second_led] -= step_size;
+		values[third_led] -= step_size;
 	}
-	else if (counter <= 60)
+	else if (counter <= milestone_stepsize * 4)
 	{
-		values[1] += 2;
-		values[2] -= 2;
-		values[3] -= 2;
+		values[second_led] += step_size;
+		values[third_led] -= step_size;
+		values[forth_led] -= step_size;
 	}
-	else if (counter <= 75)
+	else if (counter <= milestone_stepsize * 5)
 	{
-		values[2] += 2;
-		values[3] -= 2;
-		values[4] -= 2;
+		values[third_led] += step_size;
+		values[forth_led] -= step_size;
+		values[fifth_led] -= step_size;
 	}
-	else if (counter <= 90)
+	else if (counter <= milestone_stepsize * 6)
 	{
-		values[3] += 2;
-		values[4] -= 2;
-		values[5] -= 2;
+		values[forth_led] += step_size;
+		values[fifth_led] -= step_size;
+		values[sixth_led] -= step_size;
 	}
-	else if (counter <= 105)
+	else if (counter <= milestone_stepsize * 7)
 	{
-		values[4] += 2;
-		values[5] -= 2;
+		values[fifth_led] += step_size;
+		values[sixth_led] -= step_size;
 	}
-	else if (counter <= 120)
+	else if (counter <= milestone_stepsize * 8)
 	{
-		values[5] += 2;	
+		values[sixth_led] += step_size;	
 	}
 	
-	TIM_SetCompare1(TIM3, values[2]);
-	TIM_SetCompare2(TIM3, values[3]);
-	TIM_SetCompare3(TIM3, values[0]);
-  TIM_SetCompare4(TIM3, values[1]);
-	TIM_SetCompare3(TIM2, values[4]);
-	TIM_SetCompare4(TIM2, values[5]);
+	TIM_SetCompare1(TIM3, values[third_led ]);
+	TIM_SetCompare2(TIM3, values[forth_led ]);
+	TIM_SetCompare3(TIM3, values[first_led ]);
+  TIM_SetCompare4(TIM3, values[second_led]);
+	TIM_SetCompare3(TIM2, values[fifth_led ]);
+	TIM_SetCompare4(TIM2, values[sixth_led ]);
 	
-	if (counter >= 150)
+	if (counter >= max_milestone)
 	{
-		values[0] = Start_Percentage;
-		values[1] = Start_Percentage;
-		values[2] = Start_Percentage;
-		values[3] = Start_Percentage;
-		values[4] = Start_Percentage;
-		values[5] = Start_Percentage;
+		values[first_led ] = START_PERCENTAGE;
+		values[second_led] = START_PERCENTAGE;
+		values[third_led ] = START_PERCENTAGE;
+		values[forth_led ] = START_PERCENTAGE;
+		values[sixth_led ] = START_PERCENTAGE;
+		values[sixth_led ] = START_PERCENTAGE;
 		counter = 0;
 	}
 	else
