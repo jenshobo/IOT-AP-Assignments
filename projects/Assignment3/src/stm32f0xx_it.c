@@ -29,6 +29,12 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
+#include "STM32F0_discovery.h"
+#include "./lib/pwm/pwm.h"
+
+// ----------------------------------------------------------------------------
+// Global variables
+// ----------------------------------------------------------------------------
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -98,13 +104,112 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  This function handles TIM1 global interrupt request.
   * @param  None
   * @retval None
   */
-/*void PPP_IRQHandler(void)
+void TIM14_IRQHandler(void)
 {
-}*/
+	#define max_wait 32678
+	
+	static uint8_t values[] = { Start_Percentage, Start_Percentage, Start_Percentage, Start_Percentage, Start_Percentage, Start_Percentage };
+	static uint16_t counter = 0;
+	
+	static uint16_t wait = 0;
+	
+	if (wait >= max_wait)
+	{
+		wait = 0;
+	}
+	else
+	{
+		wait++;
+		return;
+	}
+	
+	NVIC_ClearPendingIRQ(TIM14_IRQn);
+	
+
+	/*
+	70% - 70% - 70% - 70% - 70% - 70% = 0   steps
+	70% - 70% - 70% - 70% - 70% - 40% = 15  steps
+	70% - 70% - 70% - 70% - 40% - 10% = 30  steps
+	70% - 70% - 70% - 40% - 10% - 40% = 45  steps
+	70% - 70% - 40% - 10% - 40% - 70% = 60  steps
+	70% - 40% - 10% - 40% - 70% - 70% = 75  steps
+	40% - 10% - 40% - 70% - 70% - 70% = 90  steps
+	10% - 40% - 70% - 70% - 70% - 70% = 105 steps
+	40% - 70% - 70% - 70% - 70% - 70% = 120 steps
+	70% - 70% - 70% - 70% - 70% - 70% = 135 steps
+	*/
+	
+	if (counter <= 15)
+	{
+		values[0] -= 2;
+	}
+	else if (counter <= 30)
+	{
+		values[0] -= 2;
+		values[1] -= 2;
+	}
+	else if (counter <= 45)
+	{
+		values[0] += 2;
+		values[1] -= 2;
+		values[2] -= 2;
+	}
+	else if (counter <= 60)
+	{
+		values[1] += 2;
+		values[2] -= 2;
+		values[3] -= 2;
+	}
+	else if (counter <= 75)
+	{
+		values[2] += 2;
+		values[3] -= 2;
+		values[4] -= 2;
+	}
+	else if (counter <= 90)
+	{
+		values[3] += 2;
+		values[4] -= 2;
+		values[5] -= 2;
+	}
+	else if (counter <= 105)
+	{
+		values[4] += 2;
+		values[5] -= 2;
+	}
+	else if (counter <= 120)
+	{
+		values[5] += 2;	
+	}
+	
+	TIM_SetCompare1(TIM3, values[2]);
+	TIM_SetCompare2(TIM3, values[3]);
+	TIM_SetCompare3(TIM3, values[0]);
+  TIM_SetCompare4(TIM3, values[1]);
+	TIM_SetCompare3(TIM2, values[4]);
+	TIM_SetCompare4(TIM2, values[5]);
+	
+	if (counter >= 150)
+	{
+		values[0] = Start_Percentage;
+		values[1] = Start_Percentage;
+		values[2] = Start_Percentage;
+		values[3] = Start_Percentage;
+		values[4] = Start_Percentage;
+		values[5] = Start_Percentage;
+		counter = 0;
+	}
+	else
+	{
+		counter++;
+	}
+	
+	NVIC_ClearPendingIRQ(TIM14_IRQn);
+}
 
 /**
   * @}

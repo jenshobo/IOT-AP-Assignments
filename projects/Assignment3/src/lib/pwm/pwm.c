@@ -1,36 +1,112 @@
-/***************************************/
-/* Code writen for Windesheim IOT 2024 */
-/***************************************/
 #include "pwm.h"
 
-#define PWM_PERIOD 1000 // 1 ms period
-#define PWM_PULSE 800 // 0.8 ms pulse (80% duty cycle)
+void init_GPIO(void);		/* Private methode(s) */
+void init_led_timers(void);
+void init_interrupt_timer(void);
 
 void pwm_init(void)
 {
-	// setting pins up
-   RCC->AHBENR |= RCC_AHBENR_GPIOBEN; // Enable GPIOB clock
+	init_GPIO();
+	init_led_timers();
+	init_interrupt_timer();
+}
+
+void init_GPIO(void)
+{
+  GPIO_InitTypeDef GPIO_InitStructure;									/* Data type for storing information */
+
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);		/* Enable GPIOB peripheral clock */
 	
-   GPIOB->MODER |= GPIO_MODER_MODER0_1; // Set pin 0 to alternate function mode
-   GPIOB->AFR[0] |= 0x1; // Select AF2 (TIM2) for pin 0
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;					/* Set GPIO to alternate function mode */
+  GPIO_InitStructure.GPIO_Pin = 0x0C33;									/* Set pin PB0, PB1, PB4, PB5, PB10 and PB11 */
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_Level_2; 	/* Set to medium speed */
+  GPIO_Init(GPIOB, &GPIO_InitStructure);								/* Initialize pins */
 	
-	// setting timers up
-  RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; // Enable TIM2 clock
-
-  // Configure TIM2
-  TIM2->CR1 &= ~TIM_CR1_CEN; // Disable TIM2
-  TIM2->PSC = 0; // No prescaler
-  TIM2->ARR = PWM_PERIOD - 1; // Auto-reload value
-  TIM2->CCR1 = PWM_PULSE; // Capture/compare register value
-
-  TIM2->CCMR1 |= TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2; // PWM mode 1
-  TIM2->CCMR1 |= TIM_CCMR1_OC1PE; // Preload enable
-
-  TIM2->CCER |= TIM_CCER_CC1E; // Enable output on channel 1
-
-  TIM2->CR1 |= TIM_CR1_ARPE; // Auto-reload preload enable
-  TIM2->EGR |= TIM_EGR_UG; // Generate update event to load the registers
-
-  TIM2->CR1 |= TIM_CR1_CEN; // Enable TIM2
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource0,  GPIO_AF_1);	/* Set alternate function source */
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource1,  GPIO_AF_1);	/* Set alternate function source */
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource4,  GPIO_AF_1);	/* Set alternate function source */
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource5,  GPIO_AF_1);	/* Set alternate function source */
 	
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_2);	/* Set alternate function source */
+	GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_2);//2);	/* Set alternate function source */
+}
+void init_led_timers(void)
+{
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+  TIM_OCInitTypeDef       TIM_OCInitStructure;
+  
+  //[..] To use the Timer in Output Compare mode, the following steps are mandatory:
+  
+  //(#) Enable TIM clock
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+  
+  //(#) Configure the Time base unit as described in the first part of this 
+  //    driver, if needed, else the Timer will run with the default 
+  //    configuration:
+  //    (++) Autoreload value = 0xFFFF.
+  //    (++) Prescaler value = 0x0000.
+  //    (++) Counter mode = Up counting.
+  //    (++) Clock Division = TIM_CKD_DIV1.
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+  TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;
+  TIM_TimeBaseStructure.TIM_Period        = Period - 1; // 200 Hz (0.2 KHz, 5ms)
+  TIM_TimeBaseStructure.TIM_Prescaler     = (SystemCoreClock / 20000) - 1;
+  TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+  
+  //(#) Fill the TIM_OCInitStruct with the desired parameters including:
+  //    (++) The TIM Output Compare mode: TIM_OCMode.
+  //    (++) TIM Output State: TIM_OutputState.
+  //    (++) TIM Pulse value: TIM_Pulse.
+  //    (++) TIM Output Compare Polarity : TIM_OCPolarity.
+  TIM_OCInitStructure.TIM_OCMode      = TIM_OCMode_PWM1;
+  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+  TIM_OCInitStructure.TIM_Pulse       = Start_Percentage;
+  TIM_OCInitStructure.TIM_OCPolarity  = TIM_OCPolarity_High;
+  
+  //(#) Call TIM_OCxInit(TIMx, &TIM_OCInitStruct) to configure the desired 
+  //    channel with the corresponding configuration.
+  TIM_OC1Init(TIM3, &TIM_OCInitStructure);
+	TIM_OC2Init(TIM3, &TIM_OCInitStructure);
+	TIM_OC3Init(TIM3, &TIM_OCInitStructure);
+	TIM_OC4Init(TIM3, &TIM_OCInitStructure);
+	
+	TIM_OC3Init(TIM2, &TIM_OCInitStructure);
+	TIM_OC4Init(TIM2, &TIM_OCInitStructure);
+	
+	// this code is not needed here
+	// set duty cycle to <Start_Percentage> (aka <Start_Percentage>% on, rest off)
+	//TIM_SetCompare1(TIM3, Start_Percentage);
+	//TIM_SetCompare2(TIM3, Start_Percentage);
+	//TIM_SetCompare3(TIM3, Start_Percentage);
+  //TIM_SetCompare4(TIM3, Start_Percentage);
+		
+	//TIM_SetCompare3(TIM2, Start_Percentage);
+	//TIM_SetCompare4(TIM2, Start_Percentage);
+
+  //(#) Call the TIM_Cmd(ENABLE) function to enable the TIM counter.
+  TIM_Cmd(TIM3, ENABLE);
+	TIM_Cmd(TIM2, ENABLE);
+}
+
+void init_interrupt_timer(void)
+{
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM14, ENABLE);
+	
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+  TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;
+	TIM_TimeBaseStructure.TIM_Period 				= 100 - 1;
+  TIM_TimeBaseStructure.TIM_Prescaler     = (SystemCoreClock / 200) - 1; // 20 Hz (0.02 KHz, 50ms)
+	
+  TIM_TimeBaseInit(TIM14, &TIM_TimeBaseStructure);
+	
+	TIM_Cmd(TIM14, ENABLE);
+	
+	TIM14->DIER |= TIM_DIER_CC1IE; // enable interrupt on capture compare
+	
+	NVIC_EnableIRQ(TIM14_IRQn);
+	NVIC_ClearPendingIRQ(TIM14_IRQn);
 }
