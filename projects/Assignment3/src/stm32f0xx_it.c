@@ -108,6 +108,25 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
+
+/******************************************************************************/
+/* Some contect for this, truthfully, questionable code.											*/
+/* Oke, So I got the TIM2 and TIM3 working on the required hertz (see pwm.h)  */
+/* but for TIM14 I could not get it to work properly. 												*/
+/* Acording to my math, which is probably sub-par, TIM14 should work with the */
+/* required hertz (again, see pwm.h), but the timer interrupt appears to go 	*/
+/* too fast, I tried changing the prescaler and period values but the timer		*/
+/* stayed the same speed, so I believe the issue is that the interrupt is			*/
+/* being called as soon as possible, resulting in a timer which is correctly 	*/
+/* set up to still be bad. 																										*/
+/* 																																						*/
+/* Due to the lack of time I regretfully have to make due with this timer and */
+/* thus you'll find a softwarematicly made timer (line 145 to line 155). 			*/
+/* This little bit of code almost give the end result as seen on the					*/
+/* assigment, it's just a little bit faster than required. But again, I am 		*/
+/* running out of time, so this will have to do sadly.												*/
+/******************************************************************************/
+
 void TIM14_IRQHandler(void)
 {
 	#define max_wait   65355
