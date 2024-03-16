@@ -43,36 +43,30 @@ void to_string( fixed number )
 
 #else
 	
-//your fixed point arithmetic code goes here
+#define Fixed_point_offset 4	/* decimal point offset by 4, 0b0000.0000 */
 
-// choose the correct type for fixed
-typedef   uint8_t  fixed;	/* uint8_t with point in the center, this gives a minimum resolution of 0.0625, and it's unsigned because we don't go lower than 0 */
+typedef   uint8_t  fixed;			/* uint8_t with point in the center, this gives a minimum resolution of 0.0625, and it's unsigned because we don't go lower than 0 */
 
-// make the correct conversion macro
-#define float_to_fixed(a)   ((uint32_t)(a * (1<<4)))    //change this /* 4 because we use a 4:4 system, change this to a define */
-#define int_to_fixed(a)			(a<<4)
-void to_string( fixed number );
+#define float_to_fixed(a)   ((uint32_t)(a * (1<<Fixed_point_offset))) /* float to fixed calculation */
+#define int_to_fixed(a)			(a<<Fixed_point_offset)										/* int to fixed calculation */
 
-// implement this code yourself
 fixed calc_average( fixed* array, int8_t lenght) {
-	// your code goes here
 	uint16_t sum = 0;
 	uint8_t index = 0;
 	
 	for (; index < lenght; index++)
 	{
-		sum += array[index];
+		sum += array[index];	/* fixed point + works the same as int + */
 	}
-	sum = (((uint32_t)sum<<4) / int_to_fixed(lenght)) + 1;
+	sum = (((uint32_t)sum<<Fixed_point_offset) / int_to_fixed(lenght)) + 1;	/* fixed point / */
 	
 	return sum; 
 }
 
-// implement this code yourself
 void to_string( fixed number ) {
 	sprintf(buffer, "%d.%1d",
-	        number >> 4,  //compute the integer part /* 4 because we use a 4.4 system, change this to a define */
-			    ((uint32_t)(number & 15) * 10000 + 16 / 2) / 16001); //compute the fractional part /* (num * 10^4 + 2^4 / 2) / 16001 (no clue why this num, got it by solfing for .5) */
+	        number >> Fixed_point_offset,  //compute the integer part
+			    ((uint32_t)(number & ((1<<Fixed_point_offset) - 1)) * 10000 + (1<<Fixed_point_offset) / 2) / 16001); //compute the fractional part
 }
 
 #endif // RUN_FLOAT
