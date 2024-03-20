@@ -29,6 +29,12 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
+#include "STM32F0_discovery.h"
+#include "./lib/pwm/pwm.h"
+
+// ----------------------------------------------------------------------------
+// Global variables
+// ----------------------------------------------------------------------------
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -98,13 +104,25 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  This function handles TIM1 global interrupt request.
   * @param  None
   * @retval None
   */
-/*void PPP_IRQHandler(void)
+
+#include "./../data/sound_data.h"
+
+void TIM6_DAC_IRQHandler(void)
 {
-}*/
+	static uint16_t index = 0;
+	
+	TIM_SetCompare1(TIM14, test_data[index]);
+	index++;
+	
+	if (index > test_length)
+	{	index = 0;	}
+	
+	NVIC_ClearPendingIRQ(TIM3_IRQn);
+}
 
 /**
   * @}
