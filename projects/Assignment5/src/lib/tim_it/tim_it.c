@@ -32,4 +32,17 @@ void interrupt_init(void)
   TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);
 	
 	TIM_Cmd(TIM6, ENABLE);
+	
+	SysTick_Config(SystemCoreClock / 10);
+}
+
+void map_prescaler(uint16_t value)
+{
+	/* value = value
+	 * low1  = 0
+	 * high1 = 65535
+	 * low2  = IT_PRESCALER_BOT
+	 * high2 = IT_PRESCALER_TOP
+	 */
+	TIM6->PSC = REMAP(value) + 1;
 }

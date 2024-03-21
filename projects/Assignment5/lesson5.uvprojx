@@ -436,6 +436,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>adc</GroupName>
+          <Files>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\lib\adc\adc.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>stm32f0-discovery</GroupName>
           <Files>
             <File>

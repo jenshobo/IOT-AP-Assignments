@@ -4,8 +4,11 @@
 /* Please see the following files for  */
 /* the implementation and explanation: */
 /*																		 */
+/* state.c														 */
+/* tim_it.c														 */
 /* pwm.c															 */
-/* dac.h															 */
+/* dac.c															 */
+/* adc.c															 */
 /***************************************/
 
 #include "stm32f0xx.h"
@@ -15,18 +18,22 @@
 #include "./lib/tim_it/tim_it.h"
 #include "./lib/pwm/pwm.h"
 #include "./lib/dac/dac.h"
+#include "./lib/adc/adc.h"
 
 int main(void)
 {
 	state_init();
 	interrupt_init();
 	pwm_init();
+	adc_init();
 	
-	for(;;) { ; }	/* Idle loop */
+	for(;;) 
+	{
+		//PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); // shit breaks when this is enabled due to the project not having the correct startup files, move everything over to a good one... again.
+	}
 }
 
 /* TODO:
- * Add third timer for ADC (10Hz)
- * Add ADC for reading potentiometer
- * Add interrupt routine to change TIM6 speed (50% - 200%, 30KHz - 120KHz)
+ * Add Sleep mode in main for loop
+ * Add .txt explaining everything
  */

@@ -31,6 +31,10 @@
 #include "stm32f0xx_it.h"
 #include "STM32F0_discovery.h"
 
+#include "./../data/sound_data.h"
+#include "./lib/state/state.h"
+#include "./lib/tim_it/tim_it.h"
+
 // ----------------------------------------------------------------------------
 // Global variables
 // ----------------------------------------------------------------------------
@@ -93,6 +97,15 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+	static uint16_t adc;
+	// Start a conversion, wait for it to complete and get the result
+	ADC_StartOfConversion(ADC1);
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
+	adc = ADC_GetConversionValue(ADC1);
+	// Wait for conversion sequence to complete
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOSEQ) == RESET);
+	
+	map_prescaler(adc);
 }
 
 /******************************************************************************/
@@ -117,10 +130,6 @@ void ADC1_COMP_IRQHandler(void)
     STM_EVAL_LEDOn(LED4);
   }
 }
-
-
-#include "./../data/sound_data.h"
-#include "./lib/state/state.h"
 
 void TIM6_DAC_IRQHandler(void)
 {
