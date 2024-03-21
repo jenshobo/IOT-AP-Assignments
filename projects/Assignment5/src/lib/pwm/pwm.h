@@ -9,5 +9,6 @@
 #define START_PERCENTAGE		(PERIOD / 2)													/* Start with 50% duty cycle */
 
 void pwm_init(void);	/* public methode(s) */
+void pwm_dest(void);
 
 #endif

@@ -56,3 +56,8 @@ void pwm_signal_init(void)
 	
 	TIM_Cmd(TIM14, ENABLE);
 }
+
+void pwm_dest(void)
+{
+	TIM_Cmd(TIM14, DISABLE);
+}

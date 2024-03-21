@@ -44,3 +44,8 @@ void dac_signal_init(void)
 	
 	DAC_Cmd(DAC_Channel_1, ENABLE);
 }
+
+void dac_dest(void)
+{
+	DAC_Cmd(DAC_Channel_1, DISABLE);
+}

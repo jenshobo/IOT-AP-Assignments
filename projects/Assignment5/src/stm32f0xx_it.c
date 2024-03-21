@@ -120,6 +120,7 @@ void ADC1_COMP_IRQHandler(void)
 
 
 #include "./../data/sound_data.h"
+#include "./lib/state/state.h"
 
 void TIM6_DAC_IRQHandler(void)
 {
@@ -134,10 +135,20 @@ void TIM6_DAC_IRQHandler(void)
 	
 		if (index > test_length)
 		{	
-			TIM_SetCompare1(TIM14, 0);	/* PWM */
-			DAC_SetChannel1Data(DAC_Align_12b_R, 0);	/* DAC */
+			//TIM_SetCompare1(TIM14, 0);	/* PWM */
+			//DAC_SetChannel1Data(DAC_Align_12b_R, 0);	/* DAC */
+			index = 0;	/* Reset and play again */
 		}
 	}
+}
+
+
+void EXTI0_1_IRQHandler(void)
+{
+	delay(1000);								/* act as debounce */
+	EXTI->PR |= EXTI_PR_PR0;	/* Clear Pending flag */
+	
+	switch_state();						/* Switch between PWM and DAC */
 }
 
 /**

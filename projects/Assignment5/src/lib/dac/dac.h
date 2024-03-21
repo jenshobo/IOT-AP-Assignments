@@ -5,5 +5,6 @@
 #include "stm32f0_discovery.h"
 
 void dac_init(void); /* Public methodes */
+void dac_dest(void);
 
 #endif
