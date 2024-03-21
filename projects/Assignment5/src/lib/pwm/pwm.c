@@ -7,20 +7,21 @@
 /*																		 */
 /* pwm.h															 */
 /***************************************/
+
 #include "pwm.h"
 
-void gpio_init(void);		/* Private methode(s) */
+void pwm_gpio_init(void);		/* Private methode(s) */
 void pwm_signal_init(void);
 void interrupt_init(void);
 
 void pwm_init(void)
 {
-	gpio_init();
+	pwm_gpio_init();
 	pwm_signal_init();
 	interrupt_init();
 }
 
-void gpio_init(void)
+void pwm_gpio_init(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 

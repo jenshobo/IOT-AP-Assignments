@@ -115,13 +115,15 @@ void TIM6_DAC_IRQHandler(void)
 {
 	static uint16_t index = 0;
 	
-	TIM_SetCompare1(TIM14, test_data[index]);
-	index++;
+	if (TIM6->SR & TIM_SR_UIF != 0)
+	{
+		TIM6->SR &= ~TIM_SR_UIF;
+		TIM_SetCompare1(TIM14, test_data[index]);
+		index++;
 	
-	if (index > test_length)
-	{	index = 0;	}
-	
-	NVIC_ClearPendingIRQ(TIM3_IRQn);
+		if (index > test_length)
+		{	TIM_SetCompare1(TIM14, 0);	}
+	}
 }
 
 /**

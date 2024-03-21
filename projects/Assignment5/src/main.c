@@ -15,6 +15,7 @@
 int main(void)
 {
 	pwm_init();
+	//dac_init();
 	
 	for(;;) { ; }	/* Idle loop */
 }
