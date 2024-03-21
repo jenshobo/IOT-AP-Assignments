@@ -12,13 +12,11 @@
 
 void pwm_gpio_init(void);		/* Private methode(s) */
 void pwm_signal_init(void);
-void interrupt_init(void);
 
 void pwm_init(void)
 {
 	pwm_gpio_init();
 	pwm_signal_init();
-	interrupt_init();
 }
 
 void pwm_gpio_init(void)
@@ -57,28 +55,4 @@ void pwm_signal_init(void)
   TIM_OC1Init(TIM14, &TIM_OCInitStructure);
 	
 	TIM_Cmd(TIM14, ENABLE);
-}
-
-void interrupt_init(void)
-{
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-	NVIC_InitTypeDef        NVIC_InitStructure;
-	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
-	
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	TIM_TimeBaseStructure.TIM_CounterMode		= TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period 				= INTERRUPT_PERIOD - 1;
-	TIM_TimeBaseStructure.TIM_Prescaler 		= INTERRUPT_PRESCALER - 1;
-	
-	TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);
-	
-  NVIC_InitStructure.NVIC_IRQChannel         = TIM6_DAC_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd      = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-	
-  TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);
-	
-	TIM_Cmd(TIM6, ENABLE);
 }

@@ -10,22 +10,25 @@
 
 #include "dac.h"
 
-//void dac_gpio_init(void);				/* Private methodes */
-//void dac_signal_init(void);
+void dac_gpio_init(void);				/* Private methodes */
+void dac_signal_init(void);
 
 void dac_init(void)
 {
-	//dac_gpio_init();
-	//dac_signal_init();
+	dac_gpio_init();
+	dac_signal_init();
 }
-/*
+
 void dac_gpio_init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
@@ -40,4 +43,4 @@ void dac_signal_init(void)
 	DAC_Init(DAC_Channel_1, &DAC_InitStructure);
 	
 	DAC_Cmd(DAC_Channel_1, ENABLE);
-}*/
+}

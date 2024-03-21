@@ -30,7 +30,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
 #include "STM32F0_discovery.h"
-#include "./lib/pwm/pwm.h"
 
 // ----------------------------------------------------------------------------
 // Global variables
@@ -104,10 +103,21 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  This function handles TIM1 global interrupt request.
+  * @brief  This function handles ADC1 and COMP global interrupt request.
   * @param  None
   * @retval None
   */
+void ADC1_COMP_IRQHandler(void)
+{
+  if(ADC_GetITStatus(ADC1, ADC_IT_AWD) != RESET)
+  {
+    ADC_ClearITPendingBit(ADC1, ADC_IT_AWD);
+    
+    // Turn on Window Watchdog indicator
+    STM_EVAL_LEDOn(LED4);
+  }
+}
+
 
 #include "./../data/sound_data.h"
 
@@ -118,11 +128,15 @@ void TIM6_DAC_IRQHandler(void)
 	if (TIM6->SR & TIM_SR_UIF != 0)
 	{
 		TIM6->SR &= ~TIM_SR_UIF;
-		TIM_SetCompare1(TIM14, test_data[index]);
+		TIM_SetCompare1(TIM14, test_data[index]);	/* PWM */
+		DAC_SetChannel1Data(DAC_Align_12b_R, test_data[index]);	/* DAC */
 		index++;
 	
 		if (index > test_length)
-		{	TIM_SetCompare1(TIM14, 0);	}
+		{	
+			TIM_SetCompare1(TIM14, 0);	/* PWM */
+			DAC_SetChannel1Data(DAC_Align_12b_R, 0);	/* DAC */
+		}
 	}
 }
 
