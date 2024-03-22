@@ -98,14 +98,13 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 	static uint16_t adc;
-	// Start a conversion, wait for it to complete and get the result
-	ADC_StartOfConversion(ADC1);
-	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
-	adc = ADC_GetConversionValue(ADC1);
-	// Wait for conversion sequence to complete
-	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOSEQ) == RESET);
 	
-	map_prescaler(adc);
+	ADC_StartOfConversion(ADC1);															/* Start conversion */
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);		/* Wait for result */
+	adc = ADC_GetConversionValue(ADC1);												/* Get result */
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOSEQ) == RESET);	/* Wait for completion */
+	
+	map_prescaler(adc);																				/* Set result */
 }
 
 /******************************************************************************/
@@ -137,16 +136,16 @@ void TIM6_DAC_IRQHandler(void)
 	
 	if (TIM6->SR & TIM_SR_UIF != 0)
 	{
-		TIM6->SR &= ~TIM_SR_UIF;
-		TIM_SetCompare1(TIM14, test_data[index]);	/* PWM */
-		DAC_SetChannel1Data(DAC_Align_12b_R, test_data[index]);	/* DAC */
+		TIM6->SR &= ~TIM_SR_UIF;																/* Reset interrupt flag */
+		
+		TIM_SetCompare1(TIM14, test_data[index]);								/* set PWM value */
+		DAC_SetChannel1Data(DAC_Align_12b_R, test_data[index]);	/* set DAC value */
+		
 		index++;
 	
-		if (index > test_length)
+		if (index > test_length)																/* If end of array is reached */
 		{	
-			//TIM_SetCompare1(TIM14, 0);	/* PWM */
-			//DAC_SetChannel1Data(DAC_Align_12b_R, 0);	/* DAC */
-			index = 0;	/* Reset and play again */
+			index = 0;																						/* Reset and play again */
 		}
 	}
 }
@@ -154,7 +153,7 @@ void TIM6_DAC_IRQHandler(void)
 
 void EXTI0_1_IRQHandler(void)
 {
-	delay(1000);								/* act as debounce */
+	delay(1000);							/* act as debounce */
 	EXTI->PR |= EXTI_PR_PR0;	/* Clear Pending flag */
 	
 	switch_state();						/* Switch between PWM and DAC */

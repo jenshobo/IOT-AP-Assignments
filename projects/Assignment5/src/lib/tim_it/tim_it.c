@@ -15,34 +15,29 @@ void interrupt_init(void)
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	NVIC_InitTypeDef        NVIC_InitStructure;
 	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);					/* Enable TIM6 peripheral clock */
 	
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	TIM_TimeBaseStructure.TIM_CounterMode		= TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period 				= IT_PERIOD - 1;
-	TIM_TimeBaseStructure.TIM_Prescaler 		= IT_PRESCALER - 1;
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;				/* Set clock devision */
+	TIM_TimeBaseStructure.TIM_CounterMode		= TIM_CounterMode_Up;	/* Set counter mode upwards */
+	TIM_TimeBaseStructure.TIM_Period 				= IT_PERIOD - 1;			/* Set clock period - 1 */
+	TIM_TimeBaseStructure.TIM_Prescaler 		= IT_PRESCALER - 1;		/* Set clock prescaler - 1 */
 	
-	TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);
+	TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);								/* Initialize TIM6 */
 	
-  NVIC_InitStructure.NVIC_IRQChannel         = TIM6_DAC_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannel         = TIM6_DAC_IRQn;		/* Enable TIM6 interrupt */
+  NVIC_InitStructure.NVIC_IRQChannelPriority = 0;								/* Set priority */
   NVIC_InitStructure.NVIC_IRQChannelCmd      = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
 	
-  TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);
+  NVIC_Init(&NVIC_InitStructure);																/* Initialize interrupt routine */
 	
-	TIM_Cmd(TIM6, ENABLE);
+  TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);										/* Enable TIM6 interrupts */
 	
-	SysTick_Config(SystemCoreClock / 10);
+	TIM_Cmd(TIM6, ENABLE);																				/* Start TIM6 */
+	
+	SysTick_Config(IT_SYSTICK);																		/* Start systick */
 }
 
 void map_prescaler(uint16_t value)
 {
-	/* value = value
-	 * low1  = 0
-	 * high1 = 65535
-	 * low2  = IT_PRESCALER_BOT
-	 * high2 = IT_PRESCALER_TOP
-	 */
-	TIM6->PSC = REMAP(value) + 1;
+	TIM6->PSC = REMAP(value) + 1;	/* Set TIM6 prescaler to new value remapped */
 }

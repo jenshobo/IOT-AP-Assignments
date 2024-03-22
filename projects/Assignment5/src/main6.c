@@ -16,24 +16,18 @@
 
 #include "./lib/state/state.h"
 #include "./lib/tim_it/tim_it.h"
-#include "./lib/pwm/pwm.h"
-#include "./lib/dac/dac.h"
 #include "./lib/adc/adc.h"
 
 int main(void)
 {
-	state_init();
-	interrupt_init();
-	pwm_init();
-	adc_init();
+	state_init();			/* Start state logic */
+	interrupt_init();	/* Start timer interrupts */
+	adc_init();				/* Setup ADC conversion */
+	
+	switch_state();		/* Start PWM or DAC */
 	
 	for(;;) 
 	{
-		//PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); // shit breaks when this is enabled due to the project not having the correct startup files, move everything over to a good one... again.
+		//PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); /* Put CPU in sleep mode, project does not support this now sadly */
 	}
 }
-
-/* TODO:
- * Add Sleep mode in main for loop
- * Add .txt explaining everything
- */

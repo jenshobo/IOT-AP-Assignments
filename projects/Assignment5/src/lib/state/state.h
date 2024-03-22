@@ -7,7 +7,10 @@
 #include "./../pwm/pwm.h"
 #include "./../dac/dac.h"
 
-void state_init(void);
+#define USE_PWM true
+#define USE_DAC false
+
+void state_init(void);	/* Public methodes */
 void switch_state(void);
 void delay(const uint32_t);
 
