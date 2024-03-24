@@ -1,4 +1,5 @@
 # IOT AP Assigments Windesheim 2024
+Provided code is written by Jens Hobo
 
 ### Important information
 - Code project for semester IOT regarding the subject AP
