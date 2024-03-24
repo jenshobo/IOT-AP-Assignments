@@ -22,17 +22,17 @@ int main(void)
 {
 	
 	
-	state_init();														/* Start state logic */
-	interrupt_init();												/* Start timer interrupts */
-	adc_init();															/* Setup ADC conversion */
+	state_init();													/* Start state logic */
+	interrupt_init();											/* Start timer interrupts */
+	adc_init();														/* Setup ADC conversion */
 	
-	switch_state();													/* Start PWM or DAC */
+	switch_state();												/* Start PWM or DAC */
 	
-	RCC->APB1ENR |= RCC_APB1ENR_PWREN;			/* Enable power interface clock */
+	RCC->APB1ENR |= RCC_APB1ENR_PWREN;		/* Enable power interface clock */
+	SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;	/* Enter sleep mode on return from IT */
 	
 	for(;;) 
 	{
-		SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;	/* Enter sleep mode */
-    __WFI(); 															/* Wait for interrupt in sleep mode */
+    __WFI(); 														/* Enter sleep mode until interrupt */
 	}
 }
