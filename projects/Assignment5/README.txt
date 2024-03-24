@@ -4,11 +4,12 @@
 | [*] PWM
 | [*] DAC
 | [*] ADC (including LED)
+| [*] Sleep mode
 |
 +---------------- - -
 | Non-working requirements:
 +---------------- - -
-| [*] Sleep mode
+| N.A.
 |
 +---------------- - -
 

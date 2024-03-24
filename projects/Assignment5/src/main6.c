@@ -20,14 +20,19 @@
 
 int main(void)
 {
-	state_init();			/* Start state logic */
-	interrupt_init();	/* Start timer interrupts */
-	adc_init();				/* Setup ADC conversion */
 	
-	switch_state();		/* Start PWM or DAC */
+	
+	state_init();														/* Start state logic */
+	interrupt_init();												/* Start timer interrupts */
+	adc_init();															/* Setup ADC conversion */
+	
+	switch_state();													/* Start PWM or DAC */
+	
+	RCC->APB1ENR |= RCC_APB1ENR_PWREN;			/* Enable power interface clock */
 	
 	for(;;) 
 	{
-		//PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); /* Put CPU in sleep mode, project does not support this now sadly */
+		SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;	/* Enter sleep mode */
+    __WFI(); 															/* Wait for interrupt in sleep mode */
 	}
 }
